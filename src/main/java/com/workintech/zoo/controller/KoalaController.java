@@ -5,26 +5,20 @@ import com.workintech.zoo.exceptions.ZooException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/workintech/koalas")
+@RequestMapping("/koalas") // Sadece /koalas yaptık
 public class KoalaController {
-
     private Map<Integer, Koala> koalas;
 
     @PostConstruct
-    public void init() {
-        koalas = new HashMap<>();
-    }
+    public void init() { koalas = new HashMap<>(); }
 
     @GetMapping
-    public List<Koala> findAll() {
-        return koalas.values().stream().toList();
-    }
+    public List<Koala> findAll() { return koalas.values().stream().toList(); }
 
     @GetMapping("/{id}")
     public Koala find(@PathVariable int id) {
@@ -36,19 +30,12 @@ public class KoalaController {
 
     @PostMapping
     public Koala save(@RequestBody Koala koala) {
-        // İstersen burada basit bir validation yapabiliriz
-        if (koala.getWeight() <= 0) {
-            throw new ZooException("Weight must be greater than 0", HttpStatus.BAD_REQUEST);
-        }
         koalas.put(koala.getId(), koala);
         return koalas.get(koala.getId());
     }
 
     @PutMapping("/{id}")
     public Koala update(@PathVariable int id, @RequestBody Koala koala) {
-        if (!koalas.containsKey(id)) {
-            throw new ZooException("Koala with id " + id + " not found for update!", HttpStatus.NOT_FOUND);
-        }
         koala.setId(id);
         koalas.put(id, koala);
         return koalas.get(id);
@@ -57,7 +44,7 @@ public class KoalaController {
     @DeleteMapping("/{id}")
     public Koala delete(@PathVariable int id) {
         if (!koalas.containsKey(id)) {
-            throw new ZooException("Koala with id " + id + " does not exist!", HttpStatus.NOT_FOUND);
+            throw new ZooException("Koala not found!", HttpStatus.NOT_FOUND);
         }
         return koalas.remove(id);
     }

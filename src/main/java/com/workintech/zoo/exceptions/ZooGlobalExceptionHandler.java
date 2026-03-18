@@ -13,11 +13,10 @@ public class ZooGlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ZooErrorResponse> handleException(ZooException exception) {
         ZooErrorResponse response = new ZooErrorResponse(
-                exception.getHttpStatus().value(), // Status (int)
-                exception.getMessage(),            // Message (String)
-                System.currentTimeMillis()
+                exception.getHttpStatus().value(), // 1: Status (int)
+                exception.getMessage(),            // 2: Message (String)
+                System.currentTimeMillis()         // 3: Timestamp (long)
         );
-        log.error("ZooException: {}", exception.getMessage());
         return new ResponseEntity<>(response, exception.getHttpStatus());
     }
 
@@ -28,7 +27,6 @@ public class ZooGlobalExceptionHandler {
                 exception.getMessage(),
                 System.currentTimeMillis()
         );
-        log.error("General Exception: {}", exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
